@@ -1,0 +1,1 @@
+web: ./meu_servidor
