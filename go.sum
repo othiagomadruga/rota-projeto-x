@@ -1,2 +1,4 @@
 github.com/gin-gonic/gin v1.9.1 h1:KKl97Xy9G8HCrxqF/g6yV46fzj+409649C+Yk197U/w=
 github.com/gin-gonic/gin v1.9.1/go.mod h1:hU7ji8jvDcxjH6+6yYjY+z9wBv5TT/6f0p/89Ru/0Yg=
+github.com/go-sql-driver/mysql v1.7.1 h1:lUIinVbN1DY0xBg0eMOzmmtGoHwWBbvnWubQUrtU8EI=
+github.com/go-sql-driver/mysql v1.7.1/go.mod h1:OXbVy3sEdcQ2Doequ6Z5BW6fXNQTmx+9S1MCJN5yJMI=
