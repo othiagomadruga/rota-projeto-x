@@ -1,37 +1,48 @@
 package main
 
 import (
-	"database/sql" // Necessário para *sql.DB e sql.Open
-	"fmt"
-	"log"    // Necessário para log.Fatal
-	"os"     // Necessário para os.Getenv
-	_ "github.com/go-sql-driver/mysql" // Driver MySQL
+	"log" // Necessário para log.Printf e log.Fatalf
+	"net/http" // Necessário para http.StatusOK, http.StatusNotFound, etc.
+	"os"   // Necessário para os.Getenv
+
+	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql" // Driver MySQL (mantido aqui por precaução, mas pode ser movido para database.go se não houver outros usos no main.go)
 )
 
-// db é declarado aqui para ser a única declaração global no pacote 'main'
-var db *sql.DB
+// main é a função de entrada da aplicação
+func main() {
+	// Inicializa a conexão com o banco de dados
+	InitDB()
 
-// InitDB inicializa a conexão com o banco de dados
-func InitDB() {
-	// Obtém a URL do banco de dados da variável de ambiente
-	dbURL := os.Getenv("DATABASE_URL")
-	if dbURL == "" {
-		// Fallback para desenvolvimento local se a variável de ambiente não estiver definida
-		// IMPORTANTE: Para Render, DATABASE_URL DEVE estar configurada
-		dbURL = "root:Thiago123@tcp(127.0.0.1:3306)/crud_go"
-		log.Println("WARNING: DATABASE_URL environment variable not set. Using local fallback.")
+	// Obtém a porta da variável de ambiente fornecida pelo Render
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Padrão para desenvolvimento local
 	}
 
-	var err error
-	db, err = sql.Open("mysql", dbURL)
+	log.Printf("Attempting to start server on port: %s", port)
+
+	// Inicializa o roteador Gin
+	r := gin.Default()
+
+	// Define as rotas da API
+	// As funções getComputadorByDeviceID e deleteComputadorByDeviceID
+	// são definidas em 'routes.go' e acessam a variável 'db'
+	// que é global no pacote 'main' (definida em 'database.go').
+	r.GET("/computadores/:device_id", getComputadorByDeviceID)
+	r.DELETE("/computadores/:device_id", deleteComputadorByDeviceID)
+
+	// Inicia o servidor Gin
+	err := r.Run(":" + port)
 	if err != nil {
-		log.Fatalf("Error opening database connection: %v", err)
+		log.Fatalf("Server failed to start on port %s: %v", port, err)
 	}
+	log.Printf("Server successfully started on port: %s", port)
+}
 
-	// Tenta fazer ping no banco de dados para verificar a conexão
-	err = db.Ping()
-	if err != nil {
-		log.Fatalf("Error connecting to the database: %v", err)
-	}
-	fmt.Println("Conectado ao banco de dados MySQL com sucesso!")
+// Computador representa a estrutura de dados de um computador
+type Computador struct {
+	DeviceID string  `json:"device_id"`
+	Nome     string  `json:"nome"`
+	Preco    float64 `json:"preco"`
 }
