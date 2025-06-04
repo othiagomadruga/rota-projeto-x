@@ -2,11 +2,11 @@ package main
 
 import (
 	"log" // Necessário para log.Printf e log.Fatalf
-	"net/http" // Necessário para http.StatusOK, http.StatusNotFound, etc.
+	// "net/http", // <--- REMOVA OU COMENTE ESTA LINHA EM main.go
 	"os"   // Necessário para os.Getenv
 
 	"github.com/gin-gonic/gin"
-	_ "github.com/go-sql-driver/mysql" // Driver MySQL (mantido aqui por precaução, mas pode ser movido para database.go se não houver outros usos no main.go)
+	_ "github.com/go-sql-driver/mysql" // Driver MySQL
 )
 
 // main é a função de entrada da aplicação
@@ -26,9 +26,6 @@ func main() {
 	r := gin.Default()
 
 	// Define as rotas da API
-	// As funções getComputadorByDeviceID e deleteComputadorByDeviceID
-	// são definidas em 'routes.go' e acessam a variável 'db'
-	// que é global no pacote 'main' (definida em 'database.go').
 	r.GET("/computadores/:device_id", getComputadorByDeviceID)
 	r.DELETE("/computadores/:device_id", deleteComputadorByDeviceID)
 
