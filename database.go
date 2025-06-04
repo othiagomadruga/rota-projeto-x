@@ -36,7 +36,7 @@ func InitDB() {
 	db.SetMaxOpenConns(10)
 
 	// Tenta fazer ping no banco de dados com um timeout para verificar a conexão
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second) // Aumentado para 15 segundos
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second) // Aumentado para 15 segundos
 	defer cancel() // Garante que o cancelamento seja chamado, liberando recursos
 
 	err = db.PingContext(ctx) // Usa PingContext para respeitar o timeout
